@@ -62,7 +62,7 @@ if __name__ == "__main__":
     print("--- 1. Login Phase ---")
     login_attempt = LoginRequest(email="user@example.com", password="secure_password123")
     user_id = OrderService.authenticate_user(login_attempt)
-
+    //
     if user_id:
         print(f"Login Successful! User ID: {user_id}")
         
