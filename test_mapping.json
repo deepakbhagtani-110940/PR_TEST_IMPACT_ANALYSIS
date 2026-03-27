@@ -1,0 +1,16 @@
+{
+  "login.spec.ts": [
+    "user login",
+    "invalid credentials",
+    "forgot password"
+  ],
+  "checkout.spec.ts": [
+    "add to cart",
+    "payment flow",
+    "order confirmation"
+  ],
+  "profile.spec.ts": [
+    "update profile",
+    "upload avatar"
+  ]
+}
