@@ -21,13 +21,19 @@ def extract_text(resp_json: dict) -> str:
         return ""
     content = (candidates[0].get("content") or {})
     parts = content.get("parts") or []
-    return "\n".join([p.get("text", "") for p in parts if p.get("text")]).strip()
+    texts = []
+    for p in parts:
+        t = p.get("text")
+        if t:
+            texts.append(t)
+    return "\n".join(texts).strip()
 
 def main() -> None:
     api_key = os.getenv("GEMINI_API_KEY", "").strip()
     if not api_key:
+        out = "### 🔍 AI Impact Analysis\n\n⚠️ Missing required secret: `GEMINI_API_KEY`\n"
         with open("output.txt", "w", encoding="utf-8") as f:
-            f.write("### 🔍 AI Impact Analysis\n\n⚠️ Missing required secret: `GEMINI_API_KEY`\n")
+            f.write(out)
         raise SystemExit(1)
 
     diff = read_file("diff.txt")[:12000]
