@@ -32,7 +32,7 @@ class CheckoutRequest(BaseModel):
     items: List[OrderItem]
     shipping_address: str
 
-# --- Service Logic ---
+# --- Service Logic ----
 class OrderService:
     @staticmethod
     def authenticate_user(login_data: LoginRequest) -> Optional[str]:
