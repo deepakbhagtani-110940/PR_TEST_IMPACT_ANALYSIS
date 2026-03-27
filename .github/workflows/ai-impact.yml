@@ -24,13 +24,8 @@ jobs:
         shell: bash
         run: |
           git fetch origin main
-
           git diff "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}" > diff.txt
           git diff --name-only "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}" > files.txt
-
-          echo "Generated diff.txt and files.txt"
-          wc -c diff.txt || true
-          wc -l files.txt || true
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -38,11 +33,11 @@ jobs:
           python-version: '3.10'
 
       - name: Install dependencies
-        run: pip install --disable-pip-version-check --no-cache-dir openai
+        run: pip install --disable-pip-version-check --no-cache-dir requests
 
-      - name: Run AI Analysis (GitHub Models endpoint)
+      - name: Run AI Analysis (Gemini)
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python .github/scripts/analyze.py
 
       - name: Post/Update PR Comment
