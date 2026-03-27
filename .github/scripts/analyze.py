@@ -1,6 +1,9 @@
 import os
 import json
-from openai import OpenAI
+import requests
+
+MODEL = "gemini-2.5-flash-lite"
+ENDPOINT = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent"
 
 MARKDOWN_FALLBACK = """### 🔍 AI Impact Analysis
 
@@ -12,21 +15,30 @@ def read_file(path: str) -> str:
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
 
+def extract_text(resp_json: dict) -> str:
+    candidates = resp_json.get("candidates") or []
+    if not candidates:
+        return ""
+    content = (candidates[0].get("content") or {})
+    parts = content.get("parts") or []
+    return "\n".join([p.get("text", "") for p in parts if p.get("text")]).strip()
+
 def main() -> None:
-    # Inputs produced by the workflow
-    diff = read_file("diff.txt")
+    api_key = os.getenv("GEMINI_API_KEY", "").strip()
+    if not api_key:
+        with open("output.txt", "w", encoding="utf-8") as f:
+            f.write("### 🔍 AI Impact Analysis\n\n⚠️ Missing required secret: `GEMINI_API_KEY`\n")
+        raise SystemExit(1)
+
+    diff = read_file("diff.txt")[:12000]
     files = read_file("files.txt")
     mapping_raw = read_file("test_mapping.json")
 
-    # Parse mapping (keep raw text if parsing fails)
     try:
         mapping = json.loads(mapping_raw) if mapping_raw.strip() else {}
         mapping_for_prompt = json.dumps(mapping, indent=2)
     except Exception:
         mapping_for_prompt = mapping_raw
-
-    # Limit diff to avoid token overflow (tweak as needed)
-    diff = (diff or "")[:12000]
 
     prompt = f"""
 You are a senior SDET doing PR impact analysis.
@@ -42,7 +54,7 @@ Test mapping:
 
 Instructions:
 - Identify impacted test spec files (ONLY from the keys in Test mapping)
-- Give clear reasoning for each impacted test
+- Give clear reasoning
 - Give confidence (0-100%)
 - Do NOT hallucinate tests outside the mapping
 - If unsure, keep confidence < 50%
@@ -57,36 +69,25 @@ Return strictly in this format:
   Confidence: <number>%
 """.strip()
 
-    # GitHub Models endpoint (as per your spec)
-    # NOTE: This assumes the endpoint accepts GITHUB_TOKEN as api_key in your environment.
-    client = OpenAI(
-        api_key=os.getenv("GITHUB_TOKEN"),
-        base_url="https://models.inference.ai.azure.com",
-    )
+    payload = {
+        "contents": [{"role": "user", "parts": [{"text": prompt}]}],
+        "generationConfig": {"temperature": 0.2, "maxOutputTokens": 800},
+    }
 
     try:
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": "You are an expert SDET."},
-                {"role": "user", "content": prompt},
-            ],
+        r = requests.post(
+            ENDPOINT,
+            params={"key": api_key},
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(payload),
+            timeout=60,
         )
 
-        output = (response.choices[0].message.content or "").strip()
-    except Exception as e:
-        output = f"""### 🔍 AI Impact Analysis
+        if r.status_code >= 400:
+            out = f"""### 🔍 AI Impact Analysis
 
-⚠️ Analysis failed while calling the model.
+⚠️ Analysis failed while calling Gemini.
 
-**Error:** `{type(e).__name__}: {e}`
-"""
-
-    if not output:
-        output = MARKDOWN_FALLBACK
-
-    with open("output.txt", "w", encoding="utf-8") as f:
-        f.write(output)
-
-if __name__ == "__main__":
-    main()
+**HTTP {r.status_code}**
+```json
+{r.text}
