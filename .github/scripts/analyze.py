@@ -47,27 +47,35 @@ def main() -> None:
     except Exception:
         mapping_for_prompt = mapping_raw
 
-    prompt = (
-        "You are a senior SDET doing PR impact analysis.\n\n"
+        prompt = (
+        "You are a senior SDET doing PR test impact analysis.\n\n"
+        "You will be given:\n"
+        "1) a list of changed files\n"
+        "2) a code diff\n"
+        "3) a test mapping JSON where keys are spec filenames and values are summaries of tests in that spec\n\n"
         "Changed files:\n"
         f"{files}\n\n"
         "Code diff:\n"
         f"{diff}\n\n"
-        "Test mapping:\n"
+        "Test mapping (ONLY these specs are allowed to be recommended):\n"
         f"{mapping_for_prompt}\n\n"
-        "Instructions:\n"
-        "- Identify impacted test spec files (ONLY from the keys in Test mapping)\n"
-        "- Give clear reasoning\n"
-        "- Give confidence (0-100%)\n"
-        "- Do NOT hallucinate tests outside the mapping\n"
-        "- If unsure, keep confidence < 50%\n"
-        "- If nothing is impacted, say so clearly\n\n"
-        "Return strictly in this format:\n\n"
+        "Task:\n"
+        "For EACH changed file, produce one row in a markdown table with these columns:\n"
+        "1) Changed file (exact filename/path)\n"
+        "2) What changed / impacted area (1-2 lines, derived from diff)\n"
+        "3) Specs to validate (comma-separated) — MUST be chosen ONLY from the keys of the test mapping. If none, write `None`.\n"
+        "4) Confidence (0-100%)\n\n"
+        "Hard rules:\n"
+        "- DO NOT mention any spec that is not present as a key in the test mapping.\n"
+        "- If you are unsure, keep confidence < 50%.\n"
+        "- If the mapping doesn’t cover the changed area, write Specs to validate = `None` and explain why in column 2.\n"
+        "- Keep output strictly markdown.\n\n"
+        "Return ONLY the following format:\n\n"
         "### 🔍 AI Impact Analysis\n\n"
-        "- File: <test file from mapping>\n"
-        "  Reason: <why impacted>\n"
-        "  Confidence: <number>%\n"
-    )
+        "| Changed file | What changed / impacted area | Specs to validate (from mapping) | Confidence |\n"
+        "|---|---|---|---|\n"
+        "| <file> | <impact summary> | <spec1, spec2 OR None> | <NN>% |\n"
+        )
 
     payload = {
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
