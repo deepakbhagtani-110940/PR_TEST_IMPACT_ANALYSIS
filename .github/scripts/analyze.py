@@ -41,13 +41,15 @@ def main() -> None:
     files = read_file("files.txt")
     mapping_raw = read_file("test_mapping.json")
 
+    # Parse mapping (keep raw if parsing fails)
     try:
         mapping = json.loads(mapping_raw) if mapping_raw.strip() else {}
         mapping_for_prompt = json.dumps(mapping, indent=2)
     except Exception:
         mapping_for_prompt = mapping_raw
 
-        prompt = (
+    # IMPORTANT: prompt must be defined outside try/except so it's always assigned
+    prompt = (
         "You are a senior SDET doing PR test impact analysis.\n\n"
         "You will be given:\n"
         "1) a list of changed files\n"
@@ -75,11 +77,11 @@ def main() -> None:
         "| Changed file | What changed / impacted area | Specs to validate (from mapping) | Confidence |\n"
         "|---|---|---|---|\n"
         "| <file> | <impact summary> | <spec1, spec2 OR None> | <NN>% |\n"
-        )
+    )
 
     payload = {
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-        "generationConfig": {"temperature": 0.2, "maxOutputTokens": 800},
+        "generationConfig": {"temperature": 0.2, "maxOutputTokens": 900},
     }
 
     out = ""
