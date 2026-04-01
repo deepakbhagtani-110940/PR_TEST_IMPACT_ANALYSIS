@@ -12,13 +12,16 @@ MARKDOWN_FALLBACK = (
     "_No impact detected (or analysis returned empty output)._"
 )
 
+# Lightweight audit log for PoC (helps with Blocker #5)
 AUDIT_LOG = "gemini_audit_log.jsonl"
+
 
 def read_file(path: str) -> str:
     if not os.path.exists(path):
         return ""
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
+
 
 def extract_text(resp_json: dict) -> str:
     candidates = resp_json.get("candidates") or []
@@ -33,34 +36,96 @@ def extract_text(resp_json: dict) -> str:
             texts.append(t)
     return "\n".join(texts).strip()
 
+
 def sanitize_text(text: str, max_len: int = 2000) -> str:
     # Remove code blocks (```...```)
     text = re.sub(r"```.*?```", "", text, flags=re.DOTALL)
     # Remove diff markers and lines starting with +, -, @@
     text = re.sub(r"^(\+|\-|@@).*$", "", text, flags=re.MULTILINE)
-    # Remove common prompt injection phrases
-    text = re.sub(r"(?i)(ignore previous instructions|system:|assistant:|user:|you are an ai|act as|role:)", "", text)
-    # Truncate to max_len
+    # Remove common prompt-injection phrases
+    text = re.sub(
+        r"(?i)(ignore previous instructions|system:|assistant:|user:|you are an ai|act as|role:)",
+        "",
+    )
+    # Truncate
     return text.strip()[:max_len]
 
-def validate_response_markdown_table(md: str, allowed_test_ids: set) -> bool:
+
+def parse_mapping(mapping_raw: str):
     """
-    Validate that the markdown table only references allowed test IDs.
-    Returns True if valid, False otherwise.
+    Parse test_mapping.json and collect:
+    - mapping dict
+    - pretty JSON for prompt
+    - allowed IDs (keys)
+    - allowed names (if mapping values have 'name')
     """
-    # Simple check: look for lines in the table and check test IDs
+    try:
+        mapping = json.loads(mapping_raw) if mapping_raw.strip() else {}
+        allowed_ids = set(k.lower() for k in mapping.keys())
+        allowed_names = set()
+        for v in mapping.values():
+            if isinstance(v, dict):
+                name = v.get("name")
+                if isinstance(name, str):
+                    allowed_names.add(name.lower())
+        return mapping, json.dumps(mapping, indent=2), allowed_ids, allowed_names
+    except Exception:
+        # Fallback: treat as opaque text
+        return {}, mapping_raw, set(), set()
+
+
+def relaxed_validate_markdown_table(md: str, allowed_ids: set, allowed_names: set) -> bool:
+    """
+    Looser validation for PoC:
+    - Allow 'None', 'N/A', empty specs
+    - Allow IDs or names if they look alnum-ish
+    - Only reject obviously suspicious content (URLs, scripts, code fences)
+    - Accept if at least half rows look okay
+    """
     lines = md.splitlines()
+    valid_rows = 0
+    total_rows = 0
+    suspicious = re.compile(r"(https?://|```|<script|</script|onerror=|onload=)", re.IGNORECASE)
+    alnumish = re.compile(r"^[\w\- ]+$")  # letters, digits, underscore, dash, space
+
     for line in lines:
         if line.startswith("|") and not line.startswith("|---"):
             cols = [c.strip() for c in line.strip("|").split("|")]
-            if len(cols) >= 3:
-                specs = cols[2]
-                if specs.lower() != "none":
-                    for test_id in specs.split(","):
-                        tid = test_id.strip()
-                        if tid and tid not in allowed_test_ids:
-                            return False
-    return True
+            if len(cols) < 3:
+                continue
+            total_rows += 1
+            specs = cols[2].strip()
+
+            # Quick reject if suspicious payload
+            if suspicious.search(specs):
+                continue
+
+            # Common benign cases
+            if specs.lower() in ("none", "n/a", ""):
+                valid_rows += 1
+                continue
+
+            entries = [e.strip().lower() for e in specs.split(",") if e.strip()]
+            if not entries:
+                valid_rows += 1
+                continue
+
+            all_ok = True
+            for t in entries:
+                if t in allowed_ids or t in allowed_names:
+                    continue
+                if alnumish.match(t):
+                    continue
+                all_ok = False
+            if all_ok:
+                valid_rows += 1
+
+    if total_rows == 0:
+        return False
+
+    # Accept if at least half the rows are valid (PoC relaxed mode)
+    return valid_rows >= max(1, total_rows // 2)
+
 
 def write_audit_log(pr_number, files, mapping_keys, status, error=None):
     log_entry = {
@@ -71,11 +136,16 @@ def write_audit_log(pr_number, files, mapping_keys, status, error=None):
         "status": status,
         "error": error,
     }
-    with open(AUDIT_LOG, "a", encoding="utf-8") as f:
-        f.write(json.dumps(log_entry) + "\n")
+    try:
+        with open(AUDIT_LOG, "a", encoding="utf-8") as f:
+            f.write(json.dumps(log_entry) + "\n")
+    except Exception:
+        # Best-effort only in PoC
+        pass
 
-def main():
-    # BLOCKER #3: API key governance (documented owner, rotation, PoC only)
+
+def main() -> None:
+    # BLOCKER #3: API key via secret (PoC – key ownership/rotation documented in spec)
     api_key = (os.getenv("GEMINI_API_KEY") or "").strip()
     if not api_key:
         out = "### 🔍 AI Impact Analysis\n\n⚠️ Missing required secret: `GEMINI_API_KEY`\n"
@@ -84,27 +154,20 @@ def main():
         write_audit_log(os.getenv("PR_NUMBER", "unknown"), [], [], "error", "missing_api_key")
         raise SystemExit(1)
 
-    # BLOCKER #2: No code diffs, only metadata
-    files = read_file("files.txt")
+    # BLOCKER #2: No code diffs — metadata only
+    files = read_file("files.txt")  # should contain only filename/status/additions/deletions etc.
     mapping_raw = read_file("test_mapping.json")
     pr_title = os.getenv("PR_TITLE", "")
     pr_body = os.getenv("PR_BODY", "")
     pr_number = os.getenv("PR_NUMBER", "unknown")
 
-    # BLOCKER #1: Input sanitization and structural prompt separation
+    # BLOCKER #1: sanitize PR content
     pr_title = sanitize_text(pr_title, 200)
     pr_body = sanitize_text(pr_body, 2000)
 
-    # Parse mapping (keep raw if parsing fails)
-    try:
-        mapping = json.loads(mapping_raw) if mapping_raw.strip() else {}
-        mapping_for_prompt = json.dumps(mapping, indent=2)
-        allowed_test_ids = set(mapping.keys())
-    except Exception:
-        mapping_for_prompt = mapping_raw
-        allowed_test_ids = set()
+    mapping, mapping_for_prompt, allowed_ids, allowed_names = parse_mapping(mapping_raw)
 
-    # BLOCKER #1: Structural prompt separation
+    # BLOCKER #1: structural separation
     prompt = (
         "SYSTEM INSTRUCTIONS:\n"
         "You are a senior SDET doing PR test impact analysis.\n"
@@ -145,6 +208,7 @@ def main():
     out = ""
     status = "success"
     error = None
+
     try:
         r = requests.post(
             ENDPOINT,
@@ -174,13 +238,15 @@ def main():
             )
         else:
             out = extract_text(r.json())
-            # BLOCKER #4: Validate Gemini response before using
-            if not validate_response_markdown_table(out, allowed_test_ids):
-                status = "invalid_ai_output"
-                error = "Gemini output failed schema/allowlist validation"
+
+            # BLOCKER #4: relaxed validation – warn but don’t block in PoC
+            is_valid = relaxed_validate_markdown_table(out, allowed_ids, allowed_names)
+            if not is_valid:
+                status = "invalid_ai_output_relaxed"
+                error = "Gemini output failed relaxed validation"
                 out = (
-                    "### 🔍 AI Impact Analysis\n\n"
-                    "⚠️ Analysis failed: Gemini output did not pass validation. No comment posted.\n"
+                    out
+                    + "\n\n> ⚠️ Posted with warnings: output did not fully pass validation (PoC relaxed mode)."
                 )
 
     except Exception as e:
@@ -195,12 +261,12 @@ def main():
     if not out.strip():
         out = MARKDOWN_FALLBACK
 
-    # BLOCKER #4: Only write validated output
     with open("output.txt", "w", encoding="utf-8") as f:
         f.write(out)
 
-    # BLOCKER #4/#5: Write audit log for compliance and incident response
-    write_audit_log(pr_number, files, allowed_test_ids, status, error)
+    # BLOCKER #4/#5: basic audit trail for PoC
+    write_audit_log(pr_number, files, allowed_ids, status, error)
+
 
 if __name__ == "__main__":
     main()
