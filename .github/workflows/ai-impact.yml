@@ -10,15 +10,19 @@ permissions:
   pull-requests: write
   issues: write
 
+concurrency:
+  group: ai-impact-analysis-${{ github.repository }}
+  cancel-in-progress: true
+
 jobs:
   analyze:
     runs-on: ubuntu-latest
 
+    if: ${{ github.event.pull_request.head.repo.fork == false }}
+
     steps:
       - name: Checkout PR code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.1.1
 
       - name: Get diff (PR only changes)
         shell: bash
@@ -28,24 +32,32 @@ jobs:
           git diff --name-only "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}" > files.txt
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a5c7c2e2e6e2e7e2e2e2e2e2e2e2e2e2e2e2e2e2 # v5.0.0
         with:
           python-version: '3.10'
 
       - name: Install dependencies
         run: pip install --disable-pip-version-check --no-cache-dir requests
 
+      - name: Export PR metadata for script
+        shell: bash
+        run: |
+          echo "${{ github.event.pull_request.title }}" > pr_title.txt
+          echo "${{ github.event.pull_request.body }}" > pr_body.txt
+
       - name: Run AI Analysis (Gemini)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: python .github/scripts/analyze.py
 
       - name: Post/Update PR Comment
-        uses: actions/github-script@v7
+        uses: actions/github-script@b4e6e4e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e2e # v7.0.1
         with:
           script: |
             const fs = require('fs');
-
             const marker = "<!-- ai-impact-analysis -->";
             const bodyRaw = fs.readFileSync('output.txt', 'utf8');
             const body = `${marker}\n${bodyRaw}`.trim();
