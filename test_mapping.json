@@ -1,16 +1,1488 @@
 {
-  "login.spec.ts": [
-    "user login",
-    "invalid credentials",
-    "forgot password"
-  ],
-  "checkout.spec.ts": [
-    "add to cart",
-    "payment flow",
-    "order confirmation"
-  ],
-  "profile.spec.ts": [
-    "update profile",
-    "upload avatar"
-  ]
+  "__tests__": {
+    "a11yApis.test.js": {
+      "summary": "Tests for Accessibility (A11y) plan details, user preferences (tab ordering, default tabs), and accessibility metadata for builds and test runs.",
+      "coverage": [
+        "A11y plan details API - return plan details for current user",
+        "User preference API - build details tab preferences order",
+        "Set preference tab to accessibility tab",
+        "Check observability/test management/app automate preference when accessibility is default tab",
+        "Verify session tab present in preferences and set as default",
+        "Accessibility meta for a build - totalIssue, reportUrl",
+        "Test meta details of a test run - reportUrl, pagingParams, testCases array",
+        "Status filter returning correct results",
+        "Multiple status filter returning correct results"
+      ]
+    },
+    "aiRca.test.js": {
+      "summary": "Tests for AI-powered Root Cause Analysis (RCA) across flat runs, test runs, build metadata, bulk RCA processing, real-time events, build statistics, and feature token validation.",
+      "coverage": [
+        "AI RCA - flat runs completed state",
+        "AI RCA - test runs completed state",
+        "AI RCA - test meta",
+        "Generate token has AI RCA feature validation",
+        "Bulk RCA - validate bulk RCA status endpoint",
+        "Bulk RCA - real-time events for bulk processing",
+        "Bulk RCA - wait for completion and validate final state",
+        "Bulk RCA - build statistics show AI RCA data",
+        "AI Failures - build level RCA",
+        "AI Failures Flat - flat endpoint returns tests for specific theme/workflow/both",
+        "Build listing V2 - aiRcaCompletedCount",
+        "Defect category - aiRcaStats.completedCount",
+        "Unique errors - aiRcaTestRunIds",
+        "thinkingData - structure validation"
+      ]
+    },
+    "allureInvalidRun.test.js": {
+      "summary": "Tests for invalid Allure report uploads including predated reports, invalid credentials, malformed zip files, unsupported formats, and hook/test predated scenarios for both single and split builds.",
+      "coverage": [
+        "Upload predated allure report - build insights and filters",
+        "Invalid user credentials error message",
+        "Invalid file format error message",
+        "Malformed zip file error on dashboard",
+        "Build rejected when hooks correct but tests predated",
+        "Build rejected when hooks predated but tests correct",
+        "Split build - hooks correct but tests predated",
+        "Split build - hooks predated but tests correct"
+      ]
+    },
+    "allureValidRun.test.js": {
+      "summary": "Tests for valid Allure report uploads (pytest). Covers test counts, workflow stats, test details (hierarchy, logs, status, attachments), and enhanced filters across test listing, build insights, test health, and unique errors.",
+      "coverage": [
+        "Test count matches workflow stats for build listing and UUID",
+        "Test details - hierarchy structures, logs, status details, attachments (test & hooks)",
+        "Consolidated logs with stack trace validation",
+        "Enhanced filters on test listing, build insights, test health, unique errors",
+        "Enhanced filters negative cases on all pages"
+      ]
+    },
+    "appium_sdk.test.js": {
+      "summary": "Tests for Appium SDK integration covering project listing, build metadata, summaries, failure modules, test listing details (OS/browser info, duration, debug logs, device/framework info), and session linking.",
+      "coverage": [
+        "Projects listing",
+        "Build listing & insights - metadata, summary, failure by modules, builds v2",
+        "Test listing - OS browser file git info, test duration, debug logs",
+        "Test details - device, framework, isSdk",
+        "Session linking",
+        "Info - overview and test code"
+      ]
+    },
+    "archivedBuilds.test.js": {
+      "summary": "Tests for archived builds covering build insights (header/meta, build history, stability stats) and ensuring archived builds are excluded from TM getTestRuns.",
+      "coverage": [
+        "Build insights - build header/meta",
+        "Build history for archived builds",
+        "Build stability stats for archived builds",
+        "TM getTestRuns does not return archived builds"
+      ]
+    },
+    "autoAnalysis.test.js": {
+      "summary": "Tests for the auto-analysis feature including consecutive run analysis, sub-category management, analyzer toggle, bulk tagging, and custom line count configuration.",
+      "coverage": [
+        "Consecutive run analysis",
+        "Updating sub-category",
+        "Switching off auto-analyzer",
+        "Delete sub-category",
+        "Bulk tagging - get similar failures and tag tests",
+        "Custom number of lines - validate smart tags, failure sub categories, and unique errors"
+      ]
+    },
+    "autoUnmute.test.js": {
+      "summary": "Tests for auto-unmute functionality covering status changes, selected run/days filters, manually muted tests, cancellation of auto-unmute, and test count verification across intermediate and auto-unmuted builds.",
+      "coverage": [
+        "Intermediate builds - test info tab for status change",
+        "Intermediate builds - test info tab for selected run and days",
+        "Intermediate builds - manually muted and auto-unmute cancelled tests",
+        "Show only unmuted filter shows all muted tests",
+        "Test count after muting",
+        "Cancelling auto-unmute of old test",
+        "Auto-unmuted builds - status change, selected run, manually muted, cancelled unmute"
+      ]
+    },
+    "buildComparison.test.js": {
+      "summary": "Tests for build comparison functionality including metadata, test status aggregation, filtered aggregation, list bucketing (NO_CHANGE, base-only, target-only), pagination, and list search.",
+      "coverage": [
+        "Both base and target builds exist",
+        "Build metadata for both builds",
+        "Correct test status aggregation",
+        "Comparison of same build",
+        "Filtered aggregation by various types",
+        "NO_CHANGE bucket listing",
+        "Tests present in only base or only target",
+        "Missing parameters (bucketName, fileOffset)",
+        "Invalid bucket name and negative fileOffset",
+        "List search - searching for stable tests"
+      ]
+    },
+    "buildComparisonArchiveNegative.test.js": {
+      "summary": "Negative tests for build comparison with archived builds, verifying all buckets have zero tests and archived build handling.",
+      "coverage": [
+        "All buckets have zero tests",
+        "Archived build in comparison"
+      ]
+    },
+    "buildComparisonNegative.test.js": {
+      "summary": "Negative tests for build comparison APIs covering invalid UUIDs, empty UUID strings, and non-existent build UUIDs for actual data, metadata, and aggregation endpoints.",
+      "coverage": [
+        "Actual data - invalid UUIDs",
+        "Actual data - empty UUID strings",
+        "Metadata - build UUIDs do not exist",
+        "Aggregation - build UUIDs do not exist"
+      ]
+    },
+    "buildStatusOveriding.test.js": {
+      "summary": "Tests for overriding build status with Quality Gate (QG) status, covering build insights metadata, build listing, and external API validation.",
+      "coverage": [
+        "Quality Gate - verify build insights metadata",
+        "Quality Gate - verify build listing",
+        "External API - common validation"
+      ]
+    },
+    "buildStopNonSdk.test.js": {
+      "summary": "Tests for the Build Stop API on non-SDK builds, validating that a new build is triggered after a build stop call.",
+      "coverage": [
+        "Validate Build Stop API call and verify new build is triggered post build stop"
+      ]
+    },
+    "ciIntegrations.test.js": {
+      "summary": "Tests for CI integrations (JUnit and SDK) covering build listing, insights, run summaries, with and without build numbers, and CI-specific search/filter for Jenkins and GitLab.",
+      "coverage": [
+        "JUnit with build number - build listing, insights, run summary",
+        "JUnit without build number - build listing, insights, run summary",
+        "Build listing search and filter by CI",
+        "SDK Jenkins - build listing, insights, run summary",
+        "SDK GitLab - build listing, insights, run summary"
+      ]
+    },
+    "ciReport.test.js": {
+      "summary": "Tests for CI reports including post-processing (Jenkins SDK), max test limit exceeded scenario, and sanitised project name handling.",
+      "coverage": [
+        "Post processing - Jenkins SDK",
+        "Max tests limit exceeded",
+        "Sanitised project name"
+      ]
+    },
+    "ciReportNegative.test.js": {
+      "summary": "Negative tests for CI reports covering scenarios where builds do not appear (First, POLL, LAST request types) and multiple builds with same name (Azure Non-SDK).",
+      "coverage": [
+        "Build does not appear - request type First",
+        "Build does not appear - request type POLL",
+        "Build does not appear - request type LAST",
+        "Multiple builds with same name - Azure Non-SDK"
+      ]
+    },
+    "ciReportSdk.test.js": {
+      "summary": "Tests for SDK CI reports where builds are not finished, covering Azure (First, POLL) and Jenkins (LAST) request types.",
+      "coverage": [
+        "Build not finished - Azure First",
+        "Build not finished - Azure POLL",
+        "Build not finished - Jenkins LAST"
+      ]
+    },
+    "ciReportsNonSdk.test.js": {
+      "summary": "Tests for Non-SDK CI reports covering build finish not done scenarios (Azure First, Jenkins Last) and Azure timeout handling.",
+      "coverage": [
+        "Build finish not done - request type First (Azure)",
+        "Build finish not done - request type Last (Jenkins)",
+        "Timeout - Azure"
+      ]
+    },
+    "csharp.test.js": {
+      "summary": "Tests for C# SDK integration covering total test counts and test hash generation.",
+      "coverage": [
+        "Total tests count",
+        "Test hash validation"
+      ]
+    },
+    "customMetaData.test.js": {
+      "summary": "Tests for custom metadata functionality including filter values in test listing/health/unique errors, page behaviour after applying filters, test detail metadata from different sources (test run finish, console logs), and build insights filter validations.",
+      "coverage": [
+        "Verify custom metadata values in test listing, test health, unique errors filters",
+        "Verify pages after applying custom metadata filters",
+        "Custom metadata in test details - from test run finish only",
+        "Custom metadata in test details - from console logs + test run finish",
+        "Custom metadata in test details - from console logs only",
+        "Build insights - alwaysFailing, flaky, newFailure, muted, defect, failureByModules stats"
+      ]
+    },
+    "dashboard.test.js": {
+      "summary": "Tests for dashboard operations (create, clone, rename, update, visibility) and widget ordering (stability, flakiness, build performance, always failing, new failures, unique test cases, test executions). Also covers project filter with pagination and metadata API.",
+      "coverage": [
+        "Create dashboard and clone with existing name",
+        "Rename dashboard and change visibility from private to public",
+        "Clone dashboard",
+        "Update dashboard",
+        "Widget ordering - stability, flakiness, build performance, always failing, new failures, unique test cases, test executions",
+        "Projects filter - create dashboard with projects array and verify filters",
+        "Metadata API - with only userIds",
+        "Metadata API - with only projectIds",
+        "Metadata API - with both userIds and projectIds",
+        "Metadata API - empty userIds array"
+      ]
+    },
+    "dashboardWidgets.test.js": {
+      "summary": "Setup/orchestration test for dashboard widget test data. Ensures test data is correctly initialised before widget child tests run.",
+      "coverage": [
+        "Dashboard widget test data setup"
+      ]
+    },
+    "DeleteProject.test.js": {
+      "summary": "Tests for project deletion in two scenarios: when a build is already finished and when a build is still running.",
+      "coverage": [
+        "Delete project - build finished",
+        "Delete project - build running"
+      ]
+    },
+    "externalApiNegative.test.js": {
+      "summary": "Negative tests for external APIs (projects, builds latest, build listing, build details, quality gate, test listing) covering incorrect auth, required fields empty, invalid IDs, and invalid filter values.",
+      "coverage": [
+        "Projects - incorrect auth",
+        "Builds latest - incorrect auth, empty required fields, invalid project name",
+        "Build listing - incorrect auth, invalid project ID, invalid filter value",
+        "Build details - incorrect auth, invalid UUID",
+        "Quality Gate - incorrect auth, invalid UUID",
+        "Test listing - incorrect auth, invalid UUID"
+      ]
+    },
+    "filters.test.js": {
+      "summary": "Tests for test type and source filters across build runs, test health, and unique errors pages. Also covers Testing Trends with build names (CAD) and unique build runs per source (TO, AA, Automate).",
+      "coverage": [
+        "Test type filters - UI, API, Unit, ALL combinations",
+        "Source filters on build runs, test health, unique errors",
+        "Testing Trends - build names (CAD)",
+        "Testing Trends - unique build runs per source (TO, AA, Automate)"
+      ]
+    },
+    "folderViewAutomationRun.test.js": {
+      "summary": "Tests for the Folder View APIs for SDK runs, covering builds API with folder filtering (has_folder flag, folder_path), precedence rules, Fetch Folder API (subfolders, root folders, pagination, ES aggregation), and SDK-only restriction.",
+      "coverage": [
+        "Builds API - default first folder when has_folder=true and no folder_path",
+        "Builds API - test runs with folder filtering",
+        "Builds API - specified folder with both flags",
+        "Builds API - non-existent folder_path graceful handling",
+        "Builds API - ignore folder_path when has_folder=false",
+        "Builds API - no folder info in staticFilters when has_folder=false",
+        "Precedence rules - has_folder takes precedence over folder_path",
+        "Missing has_folder parameter defaults to no folder filtering",
+        "Consistent response format regardless of folder parameters",
+        "Fetch Folder API - folder details and subfolders for SDK builds",
+        "Fetch Folder API - root folders with pagination and ES aggregation",
+        "Folder view only available for SDK runs",
+        "Consistency between builds API and folder API"
+      ]
+    },
+    "getGroupUsersV2.test.js": {
+      "summary": "Tests for the Get Group Users V2 API covering basic functionality, search and pagination, product access filtering, and edge cases (invalid searchAfter, invalid filters, non-integer perPage, duplicate user IDs).",
+      "coverage": [
+        "Fetch users with default parameters",
+        "Validate user object schema",
+        "Search by user name",
+        "Product access filter validation",
+        "PerPage limit and pagination using searchAfter",
+        "hasNext flag validation",
+        "Empty search result handling",
+        "Invalid searchAfter, invalid productAccessFilter, invalid/large/non-integer perPage",
+        "Response structure validation",
+        "Unique user IDs validation"
+      ]
+    },
+    "globalSearch.test.js": {
+      "summary": "Tests for the global search functionality covering paginated results mixing projects/builds/tests, global ordering by relevance/timestamp, project/build/test search by name, case insensitivity, special characters, tags, build numbers, file extensions, UUIDs, and partial search.",
+      "coverage": [
+        "Paginated response with Project, Build, Tests mixed (max 30)",
+        "Results ordered globally by relevance/timestamp",
+        "Next page continues global ordering",
+        "Project name search (exact, case-insensitive, special characters)",
+        "Build name and original name search",
+        "Pagination maintains global ordering across pages",
+        "Single character partial search",
+        "Newly created projects are searchable immediately",
+        "Build name search with spaces",
+        "Exact match search for build tags and build numbers",
+        "Partial search and exact match for test names",
+        "Search by file extension",
+        "Exact and partial UUID search"
+      ]
+    },
+    "invalidAccess.test.js": {
+      "summary": "Tests for invalid access scenarios to verify proper access-denied responses.",
+      "coverage": [
+        "Invalid access validation"
+      ]
+    },
+    "invalidBuildRun.test.js": {
+      "summary": "Tests for invalid build run scenarios including invalid keys, verifying build URL is not shown.",
+      "coverage": [
+        "Invalid keys - build URL not shown"
+      ]
+    },
+    "jiraLinkingUnlinking.test.js": {
+      "summary": "Tests for JIRA ticket linking and unlinking covering pmToolsDetails arrays in test listing, test health, and unique errors APIs, as well as pmTools filter validation.",
+      "coverage": [
+        "Same build linking - pmToolsDetails length 2 in test listing, health, unique errors",
+        "Consecutive linking - pmToolsDetails length 1 in test listing, health, unique errors",
+        "pmTools filter for test listing, test health, unique errors",
+        "Unlinking - pmToolsDetails length 1 after unlinking in test listing, health, unique errors"
+      ]
+    },
+    "junitInvalidBuildRun.test.js": {
+      "summary": "Tests for invalid JUnit build runs covering invalid credentials, predated reports (back-to-back and split builds), re-run predated scenarios, invalid/valid zip uploads, and attachment format handling.",
+      "coverage": [
+        "Invalid user credentials error message",
+        "Predated report back-to-back - build details, test history, re-run validation",
+        "Predated report split builds - retry count, re-run predated scenarios",
+        "Invalid zip - parsing error message",
+        "Valid zip after invalid - Quality Gates Skipped status",
+        "Attachments unsupported format - no parsing error"
+      ]
+    },
+    "junitSplitRun.test.js": {
+      "summary": "Tests for JUnit split runs covering build summary, test count vs workflow stats, re-run stats, and test re-run details.",
+      "coverage": [
+        "Build summary for split build run",
+        "Test count matches workflow stats for build listing and UUID",
+        "Build re-run stats for split build",
+        "Re-runs for test in split run"
+      ]
+    },
+    "junitValidBuildRun.test.js": {
+      "summary": "Tests for valid JUnit build runs covering test counts, workflow stats, test details (step logs, custom metadata, re-runs), build insights, settings defaults (timeout, smart tags, auto analyser, rerun, alerts, failure categories, email notifications), and Quality Gates.",
+      "coverage": [
+        "Test count matches workflow stats for build listing and UUID",
+        "Test details - step logs, custom metadata, re-runs and duration",
+        "Build insights for valid zip",
+        "Settings - general timeout, smart tag, auto analyser, rerun configuration, alerts, failure categories defaults",
+        "Settings - failure categories create, edit, delete subcategory",
+        "Settings - email notifications default values",
+        "Quality Gates - default profile setting and build insights widget"
+      ]
+    },
+    "liteApi.test.js": {
+      "summary": "Tests for the lite API endpoint covering scenarios with and without builds.",
+      "coverage": [
+        "Lite API with builds",
+        "Lite API without builds"
+      ]
+    },
+    "multipleBuildRun.test.js": {
+      "summary": "Tests for multiple build runs in a project covering build listing (search by tag, filter by CI/branch), build insights (flakiness, always failing, new failures, history, stability), filters (failed hooks, folder), alerts, and test listing smart tags.",
+      "coverage": [
+        "Build listing V2 - historyAggregate",
+        "Build listing - search by tag, filter by CI, filter by branch",
+        "Build insights - flakiness, always failing, new failures",
+        "Build history and stability",
+        "Filters - show failed hooks on summary/history/stability, folder flakiness",
+        "Alerts",
+        "Test listing - smart tags for alwaysFailing test"
+      ]
+    },
+    "MultipleJunitValidBuildRun.test.js": {
+      "summary": "Tests for uploading multiple valid JUnit zip reports covering projects, build listing/insights (metadata, summary, history, unique errors, stability, failure modules, defect category, rerun, flakiness, always failing, new failures), test tags filters, and builds v2.",
+      "coverage": [
+        "Projects listing",
+        "Build metadata, summary, history",
+        "Unique errors count, build stability",
+        "Failure by modules, defect category, rerun count",
+        "Flakiness, always failing, new failures",
+        "Filters - test tags for always failing, unique errors, failure categories, failure by modules",
+        "Build listing v2"
+      ]
+    },
+    "muteTests.test.js": {
+      "summary": "Tests for muting and unmuting tests covering build metadata, build insights (summary, stability, failure modules, unique errors, rerun, defect category, folder filters), test listing/health/unique errors mute filters, test meta, and Testing Trends (performance, stability, failure categories, unique build runs).",
+      "coverage": [
+        "Build metadata",
+        "Build insights - summary, stability, failure by modules, unique errors, rerun count, defect category",
+        "Build insights filters - folder",
+        "Test listing filter - mute",
+        "Test meta for muted test",
+        "Test health filter - mute",
+        "Unique errors filter - mute",
+        "Testing Trends - performance values/chart, stability values/chart, failure categories, unique build runs"
+      ]
+    },
+    "noAccess.test.js": {
+      "summary": "Tests for users with no product access verifying that access-denied messages are shown for SDK, JUnit, and Dashboard.",
+      "coverage": [
+        "SDK - access denied message",
+        "JUnit - access denied message and build URL not shown",
+        "Dashboard - access denied"
+      ]
+    },
+    "nonSdk.test.js": {
+      "summary": "Tests for non-SDK integrations (Automate and App Automate) covering test counts, workflow stats, unique build names, unique errors, test listing, test hashing, and nudge APIs.",
+      "coverage": [
+        "Automate empty test run finish - test count, workflow stats, unique build name, unique errors, test listing (name, flat view), test hash",
+        "App Automate non-empty test run finish - test listing (name, flat view, reruns, test hash)",
+        "App Automate test details - device, framework, isSdk",
+        "Nudge APIs - non-SDK build count and nonSdkSummary API"
+      ]
+    },
+    "nonSdkEspresso.test.js": {
+      "summary": "Tests for non-SDK Espresso integration covering projects, build listing, build insights (metadata, summary, failure modules), and test listing/details (OS version, duration, logs, session linking, overview).",
+      "coverage": [
+        "Projects listing",
+        "Build listing",
+        "Build insights - metadata, summary, failure by modules",
+        "Test listing - OS version displayName, test duration",
+        "Test details - debug logs, session linking, info overview"
+      ]
+    },
+    "nonSdkFlutter.test.js": {
+      "summary": "Tests for non-SDK Flutter (iOS) integration covering projects, build listing, build insights (metadata specific to Flutter iOS, summary, failure modules), and test listing/details.",
+      "coverage": [
+        "Projects listing",
+        "Build listing",
+        "Build insights - Flutter iOS specific metadata (no app_details & test_suite_details), summary, failure by modules",
+        "Test listing - OS version displayName, test duration",
+        "Test details - debug logs, session linking, info overview"
+      ]
+    },
+    "nonSdkInfraErrors.test.js": {
+      "summary": "Tests for non-SDK BrowserStack infrastructure errors, specifically verifying hub timeout error detection for Automate sessions.",
+      "coverage": [
+        "Automate - session verify hub timeout error"
+      ]
+    },
+    "nonSdkMaestro.test.js": {
+      "summary": "Tests for non-SDK Maestro integration covering projects, build listing, build insights (metadata, summary, failure modules), and test listing/details (OS version, duration, logs, session linking, overview).",
+      "coverage": [
+        "Projects listing",
+        "Build listing",
+        "Build insights - metadata, summary, failure by modules",
+        "Test listing - OS version displayName, test duration",
+        "Test details - debug logs, session linking, info overview"
+      ]
+    },
+    "nonSdkProductFilter.test.js": {
+      "summary": "Tests for non-SDK product filters across Automate, App Automate, and O11y domains covering projects, build listing/insights, test listing/details, test health, stability widget, and dashboard.",
+      "coverage": [
+        "Automate - projects, build listing, build insights, test listing, test overview, test health, overview stability widget, dashboard stability widget",
+        "Automate - JUnit project not present in Automate domain",
+        "Automate - JUnit build present in Automate build listing and insights",
+        "Automate - user home / overview with app automate project filter shows no data",
+        "App Automate - projects, build listing, build insights, test listing, test overview",
+        "App Automate - test details attachments, playwright trace viewer, build-level attachments (count, S3 URLs, file names)",
+        "External API for attachments download - response structure",
+        "O11y - projects, build listing, build insights"
+      ]
+    },
+    "nonSdkXcuitest.test.js": {
+      "summary": "Tests for non-SDK XCUITest integration covering projects, build listing, build insights (metadata, summary, failure modules), and test listing/details (OS version, duration, logs, session linking, overview).",
+      "coverage": [
+        "Projects listing",
+        "Build listing",
+        "Build insights - metadata, summary, failure by modules",
+        "Test listing - OS version displayName, test duration",
+        "Test details - debug logs, session linking, info overview"
+      ]
+    },
+    "outdatedSdkVersion.test.js": {
+      "summary": "Tests for outdated SDK version detection, verifying the outdated SDK version flag in build metadata.",
+      "coverage": [
+        "Build insights - build metadata verify outdated SDK version"
+      ]
+    },
+    "patternBasedFailureCategory.test.js": {
+      "summary": "Tests for pattern-based failure category rules covering pattern matching in test runs/meta/flat runs, multiple pattern rules with priority reordering, deletion, stack trace line limits, and enable/disable feature toggle.",
+      "coverage": [
+        "Pattern matched in testRuns, testMeta, flatTestRuns",
+        "Multiple pattern rules - highest priority pattern match",
+        "Pattern reordering - match reordered pattern",
+        "Pattern deletion - deleted pattern no longer matched",
+        "Stack trace line limit - pattern not matched beyond limit",
+        "Stack trace limit update - pattern matched after limit increase",
+        "Enable/disable pattern feature"
+      ]
+    },
+    "pivotTableWidget.test.js": {
+      "summary": "Tests for pivot table widget covering test case type combinations (owner x priority, priority x automation status, owner x type, tags x automation status, state x automation status, etc.) and test executions combinations (projects x issue type, unique run name x build tags, unique run name x issue type).",
+      "coverage": [
+        "Test Case Type - owner x priority combination",
+        "Test Case Type - priority x automation status combination",
+        "Test Case Type - owner x typeOfTestCase combination",
+        "Test Case Type - owner x automation status combination",
+        "Test Case Type - tags x automation status combination",
+        "Test Case Type - state x automation status combination",
+        "Test Case Type - priority x tags combination",
+        "Test Case Type - priority x typeOfTestCase combination",
+        "Test Case Type - priority x state combination",
+        "Test Case Type - owner x tags combination",
+        "Test Case Type - owner x state combination",
+        "Test Case Type - tags x typeOfTestCase combination",
+        "Test Case Type - tags x state combination",
+        "Test Case Type - typeOfTestCase x state combination",
+        "Test Case Type - typeOfTestCase x automation status combination",
+        "Test Executions - projects x issue type",
+        "Test Executions - unique run name x build tags",
+        "Test Executions - unique run name x issue type"
+      ]
+    },
+    "productFilters.test.js": {
+      "summary": "Tests for product-level filters (TM vs TO) covering projects, build runs, unique errors, and test health across manual, SDK, JUnit, and non-SDK project types.",
+      "coverage": [
+        "Projects - TM (includes manual project) and TO (excludes manual project)",
+        "Build runs - TM/TO filters - UniqueTestRunName / UniqueBuildRunName",
+        "Build runs - TM - manual, WDIO SDK, JUnit, non-SDK projects",
+        "Build runs - TO - manual (excluded), WDIO SDK, JUnit, non-SDK projects",
+        "Unique error - TM/TO filters - BuildNames",
+        "Unique error - TM and TO",
+        "Test health - TM"
+      ]
+    },
+    "projectListingV2.test.js": {
+      "summary": "Tests for the Project Listing V2 API covering exact name search, pagination, non-existent project search, and partial case-insensitive search.",
+      "coverage": [
+        "Search project by exact name",
+        "First page of projects with pagination info",
+        "Non-existent project returns empty list",
+        "Partial case-insensitive search returns matching projects"
+      ]
+    },
+    "publicIngestAPIs.test.js": {
+      "summary": "Tests for public ingest APIs covering valid scenarios (build re-runs, build insights/metadata, test listing with hierarchy/hooks/details/logs/attachments/custom metadata/tags/code/re-runs) and invalid scenarios (missing required params for build start/finish, test start/finish).",
+      "coverage": [
+        "Build re-runs verification",
+        "Build metadata and failure by modules",
+        "Test listing - hierarchy structure, hook tests",
+        "Test details - details, logs/attachments, custom metadata, tags/code, re-runs",
+        "Invalid - build start API missing required params",
+        "Invalid - build finish API incorrect build ID",
+        "Invalid - test start API missing required params",
+        "Invalid - test finish API incorrect test UUID"
+      ]
+    },
+    "publicLinks.test.js": {
+      "summary": "Tests for public links on project pages covering build run page (builds listing, views, filters, archive restrictions), build insights page (widget data, views, filters, PDF download, comments), and test listing page (tests, views, filters, opening a test, PDF download, test health page).",
+      "coverage": [
+        "Build run page - all builds shown, views, filters, no archive in public links",
+        "Build insights page - widgets data, views, filters, PDF download, comments",
+        "Test listing page - all tests shown, views, filters, opening a test, PDF download",
+        "Test health page"
+      ]
+    },
+    "pythonBehave.test.js": {
+      "summary": "Tests for Python Behave SDK integration covering projects, unique build names, build listing/insights metadata, test listing/details (OS/browser/git, duration, logs, session linking, device/framework/isSdk info, BDD behaviour hooks, tags), and flat view.",
+      "coverage": [
+        "Projects listing",
+        "Unique build name when empty",
+        "Build metadata",
+        "Test listing - OS browser file git info, test duration, debug logs",
+        "Session linking",
+        "Test details - device, framework, isSdk",
+        "Info - overview and Behaviour",
+        "BDD tags - before_all, before_feature/after_feature, before_tag, before_scenario/after_scenario",
+        "Test listing flat view"
+      ]
+    },
+    "pythonPytest.test.js": {
+      "summary": "Tests for Python Pytest SDK integration covering test metadata validation.",
+      "coverage": [
+        "Test meta validation"
+      ]
+    },
+    "qig.test.js": {
+      "summary": "Tests for the Quick Integration Guide (QIG) feature covering landing page states before/after first run, product switching, notification dismissal/minimisation, and framework selection for both Automate and App Automate.",
+      "coverage": [
+        "Before first run - landing page App Automate to Automate",
+        "Before first run - landing page Automate to App Automate",
+        "After first run - switch product Automate to App Automate",
+        "After first run - dismiss notification (App Automate)",
+        "After first run - minimise (App Automate)",
+        "After first run - select framework (Automate)"
+      ]
+    },
+    "queuesAndParallels.test.js": {
+      "summary": "Tests for usage summary and tier limit APIs covering TRA, App Automate, and Automate products.",
+      "coverage": [
+        "Usage Summary API - TRA, App Automate, Automate",
+        "Tier API - tier limit details for Automate and App Automate"
+      ]
+    },
+    "realTime.test.js": {
+      "summary": "Tests for real-time event streaming covering project creation, build lifecycle (started, insight updated, finished), analyzer events, alert evaluation, quality gate events, and test listing events (test run started, POST_PROCESSING_FINISHED, new tests).",
+      "coverage": [
+        "New Project Event",
+        "Build Started Event",
+        "Insight Updated Event",
+        "Build Finished Event",
+        "Analyzer Completed Event",
+        "Auto-analysis Completed Event",
+        "Alert Evaluation Started/Completed Events",
+        "Quality Gate Started/Finished Events",
+        "Test listing - Test Run Started event (include all hooks)",
+        "Test listing - POST_PROCESSING_FINISHED event",
+        "Test listing - New Tests event"
+      ]
+    },
+    "RenameProject.test.js": {
+      "summary": "Tests for project renaming covering successful rename, duplicate name, special characters, empty name, and trailing/middle space characters for both finished and running builds.",
+      "coverage": [
+        "Rename project - build finished (successful rename)",
+        "Rename with duplicate name",
+        "Rename with special chars",
+        "Rename with empty name",
+        "Rename with trailing space chars",
+        "Rename with space chars between words",
+        "Rename project - build running"
+      ]
+    },
+    "reRunSplitRun.test.js": {
+      "summary": "Tests for rerun and split run scenarios covering build metadata, test counts, workflow stats, build history, unique errors, failure modules, and rerun stats (v1, v2, buildAttemptRunStats).",
+      "coverage": [
+        "Build metadata (splits and reruns)",
+        "Test count matches workflow stats for build listing and UUID",
+        "Build summary and history",
+        "Unique errors count and failure by modules",
+        "Rerun stats v2 - count, summary, metadata, key takeaways",
+        "Rerun stats v1 - count",
+        "buildAttemptRunStats - count and individual attempts tally (passed, failed, skipped)"
+      ]
+    },
+    "sdkGrid.test.js": {
+      "summary": "Tests for external grid SDK integration covering session search functionality.",
+      "coverage": [
+        "Session search"
+      ]
+    },
+    "sdkParallelSplit.test.js": {
+      "summary": "Tests for SDK parallel split builds covering product filter and build status verification.",
+      "coverage": [
+        "Verify product filter and build status"
+      ]
+    },
+    "sdkProductFilter.test.js": {
+      "summary": "Tests for SDK product filters across Automate and App Automate dashboards, covering projects, build listing/insights, test listing/details/health, dashboard stability widget, cross-domain project visibility, and attachments (file, playwright trace viewer, S3 URLs, external API).",
+      "coverage": [
+        "Automate - projects, build listing, build insights, test listing, test details, test health, dashboard stability widget",
+        "Automate - JUnit project not in Automate domain",
+        "Automate - JUnit build in Automate build listing and insights",
+        "Automate - user home/overview with App Automate project filter shows no data",
+        "App Automate - test details attachments, playwright trace viewer",
+        "App Automate - build level attachments count and S3 URLs/file names",
+        "External API for attachments download - response structure"
+      ]
+    },
+    "selenium_sdk.test.js": {
+      "summary": "Tests for Selenium SDK integration (desktop and device types) covering projects, build listing/insights (metadata, summary, failure modules, builds v2), and test listing/details (OS/browser info, duration, logs, session linking, overview, test code).",
+      "coverage": [
+        "Projects listing (desktop and device type)",
+        "Build listing & insights - metadata, summary, failure by modules, builds v2",
+        "Test listing & details - OS browser file git info, test duration, debug logs",
+        "Session linking",
+        "Info - overview and test code"
+      ]
+    },
+    "selfHealingNonSdkAut.test.js": {
+      "summary": "Tests for self-healing in non-SDK Automate builds covering build listing (self-healed count, filter toggles, filter application) and test listing (self-healed tests, filter toggles, filter application).",
+      "coverage": [
+        "Build insights - self-healed count in build metadata",
+        "Build listing filter - self-healed toggle off/on and applied",
+        "Test listing - self-healed tests",
+        "Test listing filter - self-healing toggle off/on and applied"
+      ]
+    },
+    "sessionView.test.js": {
+      "summary": "Tests for session view covering Percy build URL in build meta, session filters (status, device, OS, browser, crash logs, self-healing), sorting (execution order, duration, status, platform), search (session error, name, BrowserStack session ID, hashedId), session details by hashedId, capabilities, and session listing/insights.",
+      "coverage": [
+        "Percy build URL in build meta",
+        "Session filters - status, device, OS, browser, crash logs, self-healed",
+        "Sorting - execution order, duration, status, platform",
+        "Search - session error, session name, BrowserStack session ID, hashedId",
+        "Fetch session details and capabilities by hashedId",
+        "Session listing and insights"
+      ]
+    },
+    "singleBuildRun.test.js": {
+      "summary": "Tests for a single build run in a project covering projects, build listing/insights (metadata, summary, history, unique errors, failure modules, defect category, rerun count, stability), and build filters (folders, hostnames, hooks visibility across all widgets).",
+      "coverage": [
+        "Projects listing",
+        "Build metadata, summary, history",
+        "Unique errors count, failure by modules, defect category, rerun count, build stability",
+        "Build filters - folders, hostnames, hooks visibility on summary/history/unique errors/flakiness/muted/new failures/always failing/stability"
+      ]
+    },
+    "splitRun.test.js": {
+      "summary": "Tests for split runs covering build insights alerts, build number sequence, consolidated duration (finished at, duration, status, unique errors), and SDK sequential split timeout scenarios.",
+      "coverage": [
+        "Build insights alert and build number sequence",
+        "Consolidated duration - finished at, duration, build status, unique errors",
+        "SDK sequential split - timeout, build status, unique errors"
+      ]
+    },
+    "statusBadge.test.js": {
+      "summary": "Tests for status badges covering valid badge selection, all badge types, deep linking, and invalid cases (missing mandatory params, invalid params).",
+      "coverage": [
+        "Default badge selection",
+        "All types of badges",
+        "Deep linking",
+        "Invalid - mandatory params not given",
+        "Invalid - invalid params given"
+      ]
+    },
+    "testHashModification.test.js": {
+      "summary": "Tests for test hash modification settings covering JUnit and non-SDK builds with various hash configurations (ignore all, consider all, regex patterns, mixed settings) across browser, device, and OS combinations, and hook history/hashIds.",
+      "coverage": [
+        "JUnit browser & device - settings ignore all vs consider all",
+        "JUnit sessions without platform info - settings ignore all",
+        "Non-SDK Automate browser & device - settings ignore all vs consider all",
+        "Non-SDK Automate browser - device/browserVersion/osVersion as regex with browser & OS as consider",
+        "SDK Automate browser & device - mixed settings (device/osVersion consider, others ignore)",
+        "SDK Automate browser & device - device/browser consider, osVersion/browserVersion regex, os ignore",
+        "SDK Automate device - device/osVersion regex, browser/browserVersion consider, os ignore",
+        "SDK Automate device - device/osVersion/os consider, browserVersion regex",
+        "SDK Automate device - device regex, browser ignore, browserVersion/os/osVersion consider",
+        "Hook history & hashIds - settings ignore all"
+      ]
+    },
+    "timeout.test.js": {
+      "summary": "Tests for timeout scenarios covering build metadata, unknown workflow status in build listing/history, build summary, unique errors, each hooks timeout, and running builds in Automate.",
+      "coverage": [
+        "Test timeout - build metadata",
+        "Timeout in unknown workflowStatus in build listing v2 and build history",
+        "Build summary and unique errors count for timeout",
+        "Each hooks timeout - build metadata, hook status, running builds (Automate)"
+      ]
+    },
+    "tmtoBuildDetailsTcFilters.test.js": {
+      "summary": "Tests for TMTO build details test case filters covering non-ASCII characters in build names and filter structure/validation for priority, case type, automation status, and test tags.",
+      "coverage": [
+        "Ensure build created with pure non-ASCII characters",
+        "TC Filters - structure validation for all filters",
+        "Priority filter validation",
+        "Case Type filter validation",
+        "Automation Status filter validation",
+        "Test Tags filter validation"
+      ]
+    },
+    "tmtobuildListing.test.js": {
+      "summary": "Tests for TMTO build listing covering non-ASCII project names, automation run tag editing, test case status filters, kebab menu bulk actions, automated build user filters, and manual run listing filters (tags, users, date, search). Also covers deletion of manual runs and v2 response validation.",
+      "coverage": [
+        "Build created for project with non-ASCII characters",
+        "Edit automation run tags",
+        "Filter by test case status in build listing",
+        "Kebab menu - add to test plan bulk action for automated runs",
+        "Automated builds - user filter (TMTO_REVIEWER_USER, TMTO_USER)",
+        "Test runs filters - tags, users (assigned to), date (1 day, 1 year), search (manual runs)",
+        "Delete first manual run via internal TM API and validate v2 response",
+        "Delete second manual run via external API and validate v2 response has no builds"
+      ]
+    },
+    "tmtoBulkActions.test.js": {
+      "summary": "Tests for TMTO bulk actions on the test listing page, specifically bulk adding manual results and verifying build metadata and run summary widget.",
+      "coverage": [
+        "Bulk Add Manual Results - buildMeta validations",
+        "Verify manual run in run summary widget"
+      ]
+    },
+    "tmtoBulkAiRca.test.js": {
+      "summary": "Tests for TMTO bulk AI RCA functionality, verifying successful RCA for failed tests.",
+      "coverage": [
+        "Bulk AI RCA - AI RCA success for failed tests"
+      ]
+    },
+    "tmtoclosedRuns.test.js": {
+      "summary": "Tests for TMTO closed run lifecycle covering closed run validation in v2 endpoint, automated run counts in closed runs tab, GCD results filter for CI runs, webhook trigger for close event, and rerun from closed runs.",
+      "coverage": [
+        "Validate closed runs in v2 endpoint",
+        "Count of automated runs in closed test runs tab",
+        "GCD - results from closed test runs - filter - CI runs only",
+        "Webhook trigger for CLOSE event of automation run",
+        "Rerun - closed runs"
+      ]
+    },
+    "tmtoManualResults.test.js": {
+      "summary": "Tests for TMTO manual results covering Quality Gate on workflow status, custom QG profiles, test case ID in API responses, QG status, manually overridden filters, test details, edit manual results, QG recalculate, build insights failure by folder, patch API status update, PDF download, real-time status bar updates, test listing sorting, and build listing.",
+      "coverage": [
+        "Quality Gate - custom profile listing, test case ID in testRuns/flat testRuns APIs",
+        "QG status - Invalid",
+        "Apply manually overridden filter and verify test status mapping",
+        "Test details - manual result not shown as retry",
+        "Test listing - test executions filter for test status",
+        "Edit manual results - test details, QG recalculate, build insights failure by folder",
+        "Update manual result status via PATCH API from test listing",
+        "PDF download - test report tests and insights",
+        "Real-time status bar update of numbers",
+        "Test listing sorting post AMR",
+        "Build listing"
+      ]
+    },
+    "tmtoPublicLinks.test.js": {
+      "summary": "Tests for TMTO public links on the automation trend page, verifying widget data for NEW_FAILURES, FLAKINESS, PERFORMANCE, STABILITY, TEST_EXECUTIONS, and DEFECTS_TREND widgets.",
+      "coverage": [
+        "NEW_FAILURES widget data in AUTOMATION-TREND view",
+        "FLAKINESS widget data in AUTOMATION-TREND view",
+        "PERFORMANCE widget data in AUTOMATION-TREND view",
+        "STABILITY widget data in AUTOMATION-TREND view",
+        "TEST_EXECUTIONS widget data in AUTOMATION-TREND view",
+        "DEFECTS_TREND widget data in AUTOMATION-TREND view"
+      ]
+    },
+    "tmtoRerunSplitrunAMR.test.js": {
+      "summary": "Tests for adding manual results (AMR) on split run and rerun builds covering single AMR validation, manually overridden filter, test details, edit manual result, and bulk add manual results.",
+      "coverage": [
+        "Single AMR - API response structure",
+        "Apply manually overridden filter and verify test status mapping",
+        "Test details - manual result not shown as retry",
+        "Edit Manual Result - API response shows updated status",
+        "Edit Manual Result - test listing status verification",
+        "Edit Manual Result - testMeta API",
+        "Bulk Add Manual Results"
+      ]
+    },
+    "tmtoResultsFromClosedTestRuns.test.js": {
+      "summary": "Tests for TMTO results from closed test runs covering non-ASCII project builds, PCD widget with test status filter, time range key validation, unique test run name global filter, and GCD widget with test run tags global filter.",
+      "coverage": [
+        "Build created for project with non-ASCII characters",
+        "PCD - results from closed test runs widget with Test Status Filter",
+        "PCD - data in latest key (time range)",
+        "PCD - results from closed test runs with Unique Test Run Name Filter (Global)",
+        "GCD - results from closed test runs widget with test run tags global filter"
+      ]
+    },
+    "tmtoTestRunGrouping.test.js": {
+      "summary": "Tests for TMTO test run groups covering CRUD operations on groups without linked runs, groups with linked test runs and builds, unlinking builds, and filtering by test case status in group view.",
+      "coverage": [
+        "Create test run group without linked test runs",
+        "Create test run group with duplicate name (should fail)",
+        "Edit test run group without linked test runs",
+        "Delete test run group without linked test runs",
+        "Get test run groups",
+        "Create test run group with linked test runs and builds",
+        "Unlink builds from group",
+        "Filter by test case status in test run group view and verify count"
+      ]
+    },
+    "tmtoUniqueTestRunNameFilter.test.js": {
+      "summary": "Tests for unique test run name global filter covering progressive filtering in TM project insights dashboard and TRA testing trends dashboard.",
+      "coverage": [
+        "Progressive filtering in TM - Project Insights Dashboard",
+        "Progressive filtering in TRA - Testing Trends Dashboard"
+      ]
+    },
+    "tmtoWebhooks.test.js": {
+      "summary": "Tests for TMTO webhook configuration and event triggers covering test webhook connection, create/update/delete webhooks, enable/disable webhooks, and events for Test Case (CREATE, UPDATE, DELETE), Test Plan (CREATE, UPDATE start/complete, DELETE, with attachment), and Test Run (CREATE) entities.",
+      "coverage": [
+        "Test webhook connection",
+        "Create, update, delete webhook for create/update/delete events",
+        "Update project type in webhook",
+        "Disable and enable webhook",
+        "Build trigger events - Test Case CREATE, UPDATE, DELETE",
+        "Verify event not received when webhook disabled",
+        "Verify event received when webhook enabled",
+        "Build trigger events - Test Plan CREATE, UPDATE (start/complete), DELETE, CREATE with attachment",
+        "Build trigger events - Test Run CREATE"
+      ]
+    },
+    "turboscale.test.js": {
+      "summary": "Tests for TurboScale SDK integration covering projects and build listing/insights.",
+      "coverage": [
+        "Projects listing",
+        "Build listing and insights"
+      ]
+    },
+    "turboscaleNonSdk.test.js": {
+      "summary": "Tests for TurboScale non-SDK integration covering projects, builds v2, build listing/insights (metadata, summary, failure modules), test listing (OS/browser displayName, duration), and test details (logs, session linking, overview).",
+      "coverage": [
+        "Projects listing",
+        "Builds v2",
+        "Build insights - metadata, summary, failure by modules",
+        "Test listing - OS browser displayName, test duration",
+        "Test details - debug logs, session linking, info overview"
+      ]
+    },
+    "views.test.js": {
+      "summary": "Tests for view CRUD operations (duplicate, clone with existing name, rename/visibility, create public view) across Build Insights, Build Listing, Test Listing, Test Health, and Unique Errors pages.",
+      "coverage": [
+        "Build Insights views - duplicate, clone with existing name, rename & visibility (private to public)",
+        "Build Listing views - duplicate, clone with existing name, create public view",
+        "Test Listing views - duplicate, clone with existing name, create public view",
+        "Test Health views - duplicate, clone with existing name, create public view",
+        "Unique Errors views - duplicate, clone with existing name, create public view"
+      ]
+    },
+    "webhookConfigureAdvanced.test.js": {
+      "summary": "Tests for advanced webhook configuration covering build completion and test failure events including fail scenarios and pass-after-fail scenarios, plus auto-retries for test failures.",
+      "coverage": [
+        "Build Completion - Fail",
+        "Build Completion - Pass after Fail",
+        "Test Failure - Fail",
+        "Test Failure - Pass after Fail",
+        "Test Failure - auto retries"
+      ]
+    },
+    "widgets.test.js": {
+      "summary": "Tests for dashboard widgets setup and configuration.",
+      "coverage": [
+        "Widgets setup and configuration"
+      ]
+    }
+  },
+  "__stagingTests__": {
+    "codeOwners.test.js": {
+      "summary": "Tests for code owner notifications on test results covering retry failures (notification sent), retry passed (no notification), single failure notification, disabled notifications, incorrect owner names, and muted tests.",
+      "coverage": [
+        "Upload WDIO Allure report for retry failed - notification sent for failed test",
+        "Upload WDIO Allure report for retry passed - notification not sent",
+        "Upload WDIO Allure report for single failure - notification sent",
+        "Notifications disabled - notification not sent for failed test",
+        "Incorrect owner names - notification not sent",
+        "Muted tests - notification not sent"
+      ]
+    },
+    "externalApiNegative.test.js": {
+      "summary": "Staging-environment negative tests for external APIs verifying freemium user access restrictions across projects, builds latest, build listing, build details, quality gate, test listing, and update build endpoints.",
+      "coverage": [
+        "Projects - freemium user access",
+        "Builds latest - freemium user access",
+        "Build listing - freemium user access",
+        "Build details - freemium user access",
+        "Quality Gate - freemium user access",
+        "Test listing - freemium user access",
+        "Update build - freemium user access"
+      ]
+    },
+    "featureFencing.test.js": {
+      "summary": "Tests for feature fencing based on plan tiers covering init and usageDetails APIs for freemium users (without builds, with one build run) and default paid users with multiple builds.",
+      "coverage": [
+        "Freemium user without any build runs - init API and usageDetails API",
+        "Freemium user with only one build run - init API and usageDetails API",
+        "Default paid user with multiple builds - init API and usageDetails API"
+      ]
+    },
+    "freemium.test.js": {
+      "summary": "Tests for freemium user experience covering build run restrictions (pro filters, build & QG status), email/slack notifications, and Preference Center (product reports toggle, manage email integrations).",
+      "coverage": [
+        "Build run - build insights pro filters",
+        "Freemium user - build & QG status",
+        "Notifications - email notification",
+        "Notifications - slack notification",
+        "Preference Center - Product Reports & Notifications toggle OFF",
+        "Preference Center - Integrations Manage Email ON (any one)",
+        "Preference Center - Integrations Manage Email OFF (all)"
+      ]
+    },
+    "plans.test.js": {
+      "summary": "Tests for plan-based feature access across multiple plan configurations (O11y pro without TRA essential + others free, O11y pro legacy + others free, O11y pro legacy + Automate pro) covering plan details, pro features, and external API access.",
+      "coverage": [
+        "O11y pro without TRA essential + others free - plan details, pro features, external APIs",
+        "O11y pro legacy + others free - plan details, pro features, external APIs",
+        "O11y pro legacy + Automate pro - plan details, pro features, external APIs"
+      ]
+    },
+    "qig.test.js": {
+      "summary": "Staging tests for the Quick Integration Guide (QIG) covering steps and calculations for Automate and App Automate with run_first_build true/false, goal thresholds (>=85%, <85%), qigMinimized flag, and user preference settings.",
+      "coverage": [
+        "Automate Steps - run first build is false",
+        "App Automate Steps - run first build is false",
+        "Automate Calculations - run first build is false",
+        "App Automate Calculations - run first build is false",
+        "Automate Steps - run first build is true",
+        "App Automate Steps - run first build is true",
+        "Automate Calculations - run first build is true",
+        "App Automate Calculations - run first build is true",
+        "Automate - Goals >= 85%, qigMinimized false, no user preference",
+        "App Automate - Goals >= 85%, qigMinimized false, no user preference",
+        "Automate - Goals < 85%, qigMinimized false, no user preference",
+        "App Automate - Goals < 85%, qigMinimized false, no user preference",
+        "Automate/App Automate - qigMinimized is true",
+        "Automate - Goals >= 85%, user preference set to true",
+        "App Automate - Goals < 85%, user preference set to false"
+      ]
+    },
+    "rcaFeatureFencing.test.js": {
+      "summary": "Tests for RCA feature fencing based on plan tier covering access for Automate PRO-RCA, App Automate PRO-RCA, freemium users, and plan upgrade/downgrade scenarios via Redis mock.",
+      "coverage": [
+        "testRca API returns 200 for AUTOMATE PRO-RCA user",
+        "testRca API returns 200 for APP_AUTOMATE PRO-RCA user",
+        "testRca API returns 403 for freemium user",
+        "testRca API returns 403 for freemium user before plan upgrade",
+        "testRca API returns 200 after plan upgrade to TRA Pro via Redis mock",
+        "testRca API returns 200 for AUTOMATE PRO-RCA user before plan downgrade",
+        "testRca API returns 403 after plan downgrade to Automate Freemium via Redis mock"
+      ]
+    },
+    "subGroup.test.js": {
+      "summary": "Tests for sub-group functionality covering test executions and UDAC team scenarios.",
+      "coverage": [
+        "Sub Groups - test executions",
+        "Sub Groups - UDAC team"
+      ]
+    },
+    "testsRedisLock.test.js": {
+      "summary": "Tests for Redis lock behaviour covering test health, testing trends (platforms coverage CBT, test executions), and dashboard widgets (aggregate summary, test by status, top unstable tests).",
+      "coverage": [
+        "Test health with Redis lock",
+        "Testing trends - PLATFORMS_COVERAGE (CBT)",
+        "Testing trends - test executions",
+        "Dashboard widgets - aggregate summary",
+        "Dashboard widgets - test by status",
+        "Dashboard widgets - top unstable tests"
+      ]
+    },
+    "tmtoSubGroupUser.test.js": {
+      "summary": "Tests for subgroup user dashboard widget filter APIs verifying manual project visibility for subgroup users.",
+      "coverage": [
+        "Dashboard widgets filters - manual project visibility for subgroup user"
+      ]
+    },
+    "userSync.test.js": {
+      "summary": "Tests for user synchronisation covering test execution count after sync and RBAC role change propagation.",
+      "coverage": [
+        "Test execution count after user sync",
+        "Change RBAC role"
+      ]
+    }
+  },
+  "__subGroupTests__": {
+    "testExecutions.test.js": {
+      "summary": "Tests for test execution quotas and billing across Free, Free Trial, and Paid plan tiers. Covers billable test execution counts, usage banners (80%, 90%, 100% thresholds), locked build behaviour (insights, test health, testing trends), and email/slack notifications when limits are reached.",
+      "coverage": [
+        "Free plan - billable test executions",
+        "Free plan - 80%, 90%, 100% usage banners",
+        "Free plan - locked builds - build insights, test health, testing trends (unique build runs, test executions)",
+        "Free plan - locked builds - email and slack notifications",
+        "Free trial - billable test executions, 80%, 90%, 100% usage banners",
+        "Paid plan - billable test executions",
+        "Paid plan - 80%, 90%, 100% usage banners",
+        "Paid plan - locked builds - build insights, test health, testing trends (unique build runs, test executions)",
+        "Paid plan - locked builds - email and slack notifications"
+      ]
+    },
+    "udacTeam.test.js": {
+      "summary": "Tests for UDAC team filter functionality across multiple pages covering overview personalisation (team filter, home takeaway, unique builds, notifications), build runs, test health, unique errors, build list sidebar, reports, custom dashboard, and TM widget exclusions.",
+      "coverage": [
+        "Overview page - apply team filter successfully",
+        "Overview page - verify home takeaway filtered metrics",
+        "Overview page - verify unique builds filtered metrics",
+        "Overview page - filtered notifications data is empty",
+        "Build Runs page - build UUID matches expected UUID with team filter",
+        "Test Health page - tests array is not empty with team filter",
+        "Unique Errors page - errors array is not empty with team filter",
+        "Build List Sidebar - data array is not empty and contains expected UUID with team filter",
+        "Reports - verify metric after UDAC team filter",
+        "Custom Dashboard - verify UDAC team filter on dashboard",
+        "TM Widgets - team filter not applicable for Automation Coverage",
+        "TM Widgets - team filter not applicable for Test Case Trend",
+        "TM Widgets - team filter not applicable for Test Case Type",
+        "TM Widgets - team filter not applicable for Test Case Statistics"
+      ]
+    }
+  },
+  "__demoSandBox__": {
+    "demoSandBox.test.js": {
+      "summary": "Sandbox/demo test suite for validating core observability features end-to-end including project listing, build listing, build insights, test listing, test health, unique errors, testing trends, init API, project settings, and dashboard operations.",
+      "coverage": [
+        "Project listing",
+        "Build listing",
+        "Build insights - summary and unique errors",
+        "Test listing",
+        "Test health",
+        "Unique errors",
+        "Testing Trends - latest unique build runs, stability (values/chart), new failures, always failing, flakiness, performance (values/chart), build run frequency",
+        "Init API",
+        "Project Settings - alerts, auto analyser, failure categories, rerun configuration, QG, webhooks, smart tags, email notifications",
+        "Dashboard - list"
+      ]
+    }
+  },
+  "__dashboardWidgetChildTests__": {
+    "activeTestRuns.test.js": {
+      "summary": "Tests for the Active Test Runs widget on both Global Dashboard (GCD) and Project Dashboard (PCD). Covers widget creation with various filters (project, buildName, buildTags), global filter application, public/private dashboard visibility, widget drill-down, and Test Observability (TO) source support.",
+      "coverage": [
+        "GCD - Active Test Runs widget with project filter",
+        "GCD - Active Test Runs Manual widget with buildName and project filters",
+        "GCD - Active Test Runs Automation widget with buildTags and project filters",
+        "GCD - Active Runs widget with global filter (buildTags: p1)",
+        "GCD - Dashboard public visibility and listing verification",
+        "GCD - Update dashboard to private view",
+        "GCD - Widget drill down with project filter",
+        "GCD - Widget drill down with global filter (buildTags, workflowStatus: Blocked)",
+        "GCD - Active Test Runs widget for Test Observability (TO) source",
+        "GCD - Active Runs Automation widget with TO source",
+        "GCD - Active Runs widget with global filter for TO source",
+        "GCD - Dashboard listing for TO source",
+        "GCD - Widget drill down with TO source",
+        "PCD - Create dashboard verification",
+        "PCD - Active Builds widget with date and test run global filter for manual run",
+        "PCD - Edit test run name and filter by test run",
+        "PCD - Active Test Runs widget with buildName and buildTags filter for automation and AMR build via TM source",
+        "PCD - Active Test Runs widget with buildName filter for automation build via TO source",
+        "PCD - Active Builds widget with date and test run global filter for TO automated build"
+      ]
+    },
+    "automationCoverage.test.js": {
+      "summary": "Tests for the Automation Coverage widget on the Global Dashboard (GCD). Covers widget creation in various configurations (line/table visualization, segments, filters), automation percentage calculations, project and folder-level filters, and global user filter application.",
+      "coverage": [
+        "GCD - Create Automation Coverage widget with default line visualization and segment",
+        "GCD - Widget with non-default table visualization and test attribute filters",
+        "GCD - Widget with default line visualization and project filter segment",
+        "GCD - Widget with non-default line visualization and multiple segments",
+        "GCD - Widget with default table visualization and project attribute with folder filter",
+        "GCD - Widget with default line visualization, project filter, and global users filter"
+      ]
+    },
+    "closedTestRuns.test.js": {
+      "summary": "Tests for the Closed Test Runs widget on both Global Dashboard (GCD) and Project Dashboard (PCD). Covers widget creation with project, buildName, and buildTags filters, global filter application, widget drill-down, manual and automated build verification, and Test Observability (TO) source support.",
+      "coverage": [
+        "GCD - Closed Test Runs widget with project filter",
+        "GCD - Closed Runs Manual widget with buildName and project filters",
+        "GCD - Closed Runs Automation widget with buildTags and project filters",
+        "GCD - Closed Runs widget with global filter (buildTags: p1)",
+        "GCD - Widget drill down with project filter",
+        "GCD - Widget drill down with global filter (buildTags: p1)",
+        "PCD - Closed test runs verification for manual builds",
+        "PCD - Closed test runs with global (buildName, match) filter for manual builds",
+        "PCD - Closed test runs with widget (buildTags, match) filters for manual builds",
+        "PCD - Closed test runs for automated builds",
+        "PCD - Closed test runs with global (buildName, buildTag) filters for automated builds in TO source",
+        "PCD - Closed test runs with widget (buildName, buildStatus) filters for automated builds in TO source"
+      ]
+    },
+    "dateFilterValidation.test.js": {
+      "summary": "Tests for the date filter upper bound validation on dashboard widgets. Verifies that widgets correctly honor custom date filter upper bounds when filtering data.",
+      "coverage": [
+        "Widget date filter upper bound validation - Closed Test Runs widget honors custom date filter upper bound"
+      ]
+    },
+    "defaultDashboardViews.test.js": {
+      "summary": "Tests for default dashboard views covering TRA Testing Trends and TM Default Dashboard. Includes validation of default widget configurations, CRUD operations on both project-level and global dashboards, widget data assertions (test case trend, breakdown, statistics, active builds), and cross-product visibility between TRA and TM dashboards.",
+      "coverage": [
+        "TRA - Testing trends default view validation (name, date range, level, widget count, filters)",
+        "TM Default Dashboard - Default dashboard view and widget count",
+        "TM Default Dashboard CRUD - Create dashboard",
+        "TM Default Dashboard CRUD - Views across projects",
+        "TM Default Dashboard CRUD - Update dashboard",
+        "TM Default Dashboard CRUD - Clone dashboard",
+        "TM Default Dashboard CRUD - Delete dashboard",
+        "TM Default Dashboard - Test Case Trend widget data",
+        "TM Default Dashboard - Test Case Breakdown widget data",
+        "TM Default Dashboard - Test Case Statistics - Automation Coverage",
+        "TM Default Dashboard - Test Case Statistics - Automated Test Cases",
+        "TM Default Dashboard - Test Case Statistics - Manual Test Cases",
+        "TM Default Dashboard - Test Case Statistics - Total test case count",
+        "TM Default Dashboard - Test Case Statistics - Zero count with global user filter",
+        "TM Default Dashboard - Active Builds (Active Test Runs) widget data",
+        "Global Dashboard CRUD - Create Global Dashboard",
+        "Global Dashboard CRUD - Update Global Dashboard",
+        "Global Dashboard CRUD - Clone Global Dashboard",
+        "Global Dashboard CRUD - Delete Global Dashboard",
+        "Cross-product - Dashboard created in TRA reflects in TM listing (Public)",
+        "Cross-product - Dashboard created in TRA reflects in TM listing (Private)"
+      ]
+    },
+    "defectsLogged.test.js": {
+      "summary": "Tests for the Defects Logged widget on both Project Dashboard (PCD) and Global Dashboard (GCD). Validates JIRA ticket linking counts for manual and automation builds, global filter behavior, GCD visibility from different sources, and duplicate dashboard name prevention.",
+      "coverage": [
+        "PCD - Testing Trends dashboard should not include defects logged widget",
+        "PCD - Defects Logged widget with automation builds filter (buildTags: Something Else) - 1 JIRA ticket linked",
+        "PCD - Defects Logged widget with automation builds and global buildName filter (junit build) - 0 JIRA tickets linked",
+        "GCD - Dashboard saved with 3 defects logged widgets verification",
+        "GCD - Dashboard not visible from TRA source",
+        "GCD - Defects Logged widget with automation builds filter (buildTags: Something Else) - 1 JIRA ticket linked",
+        "GCD - Defects Logged widget with automation builds and global buildName filter (junit build) - 0 JIRA tickets linked",
+        "GCD - Create dashboard with duplicate name using TM source - should fail",
+        "GCD - Create dashboard with duplicate name using TRA source - should fail"
+      ]
+    },
+    "resultsFromClosedTestRuns.test.js": {
+      "summary": "Tests for the Results from Closed Test Runs widget on both Global Dashboard (GCD) and Project Dashboard (PCD). Covers manual and automated build result verification, global filter application (users, branches), widget drill-down, time range validation, and Test Observability (TO) source support.",
+      "coverage": [
+        "GCD - Results from Closed Test Runs Manual widget with buildName and project filters",
+        "GCD - Closed Runs widget with global filter (users)",
+        "GCD - Widget drill down with project filter",
+        "GCD - Widget drill down with global filter (branches)",
+        "PCD - Results from closed test runs for manual builds",
+        "PCD - Results from closed test runs with global (buildTags, match) filter for manual builds",
+        "PCD - Results from closed test runs with widget (buildOwners, match) filters for manual builds",
+        "PCD - Data validation in latest key (time range)",
+        "PCD - Results from closed test runs with widget (buildName, workflowStatus) filters for automated builds in TO source"
+      ]
+    },
+    "testCaseBreakdown.test.js": {
+      "summary": "Tests for the Test Case Breakdown widget on both Project Dashboard (PCD) and Global Dashboard (GCD). Covers breakdown by priority, owner, tags, type, status, automation status, and custom fields. Includes global filter validation, widget drill-down, custom date range filters, and Test Observability (TO) source support.",
+      "coverage": [
+        "PCD - Create test case breakdown dashboard",
+        "PCD - Owner Breakdown widget with custom old date range and global filters",
+        "PCD - Priority Breakdown widget data verification",
+        "PCD - Owner Breakdown widget data verification",
+        "PCD - Tags Breakdown widget data verification",
+        "PCD - Type Breakdown widget data verification",
+        "PCD - Status Breakdown widget data verification",
+        "PCD - Automation Status Breakdown widget data verification",
+        "PCD - Custom Field Breakdown widget data verification",
+        "PCD - Automation Status Breakdown widget with TO source",
+        "PCD - Type Breakdown widget with TO source",
+        "GCD - Priority Breakdown widget with project filter only",
+        "GCD - Owner Breakdown widget with project and owner filters",
+        "GCD - Tags Breakdown widget with project and tags filters",
+        "GCD - Type Breakdown widget with project filter only",
+        "GCD - Status Breakdown widget with project filter only (active status)",
+        "GCD - Automation Status Breakdown widget with project filter only (obsolete status)",
+        "GCD - Custom Field Breakdown widget with project and custom field filters",
+        "GCD - Global filters application should not change widget counts",
+        "GCD - Widget drill down - Priority Breakdown with project filter",
+        "GCD - Widget drill down with global filter - Owner Breakdown with tag filters",
+        "GCD - Automation Status Breakdown widget with TO source",
+        "GCD - Widget drill down - Priority Breakdown with TO source"
+      ]
+    },
+    "testCaseStatistics.test.js": {
+      "summary": "Tests for the Test Case Statistics / Statistics Cards widget on both Project Dashboard (PCD) and Global Dashboard (GCD). Covers statistics cards for test cases and defects with number and percentage display types, various filter combinations (workflow status, test run type, tags, folders), global user filter impact, widget drill-down, and Test Observability (TO) source support.",
+      "coverage": [
+        "PCD - Statistics Card widget with display type Number and no filters",
+        "PCD - Statistics Card widget with display type Percentage and testCaseStatuses filter",
+        "PCD - Statistics Card widget with TO source and global users filter",
+        "PCD - Defect Statistics Card widget with display type Number and no filters",
+        "PCD - Defect Statistics Card widget with display type Percentage and workflowStatus filter (Passed)",
+        "PCD - Defect Statistics Card widget with display type Number and Test Run Type filter",
+        "PCD - Defect Statistics Card widget with TO source and global users filter",
+        "GCD - Statistics Card widget with display type Number and project filter",
+        "GCD - Statistics Card widget with display type Percentage and testCaseTags filter",
+        "GCD - Statistics Card widget with display type Number and global users filter",
+        "GCD - Widget drill down with global filter - Statistics Card (users)",
+        "GCD - Statistics Card widget with TO source and automation statuses drill down",
+        "GCD - Statistics Card with global project filter and widget folder filter",
+        "GCD - Filter validation API - testCaseFolders filter options with progressive filtering",
+        "GCD - Defect Statistics Card widget with display type Number and project filter",
+        "GCD - Defect Statistics Card widget with unique run name (global) and users (widget) filters",
+        "GCD - Widget drill down with global filter - Defect Statistics Card (users)"
+      ]
+    },
+    "testCaseTrend.test.js": {
+      "summary": "Tests for the Test Case Trend (Trend of Test Cases) widget on both Project Dashboard (PCD) and Global Dashboard (GCD). Covers trend data verification with various widget-level filters (priority, automation status), global user filter application, widget drill-down, and Test Observability (TO) source support.",
+      "coverage": [
+        "PCD - Verify Trend of Test Cases (default)",
+        "PCD - Verify Trend of Test Cases with widget level filter (testCasePriorities: medium, high)",
+        "PCD - Verify Trend widget with global filter (users) for TO source",
+        "GCD - Verify Trend of Test Cases with project filter",
+        "GCD - Verify Trend of Test Cases with widget level filter (testCaseAutomationStatuses: obsolete)",
+        "GCD - Verify Trend widget with global filter (users)",
+        "GCD - Widget drill down with global filter - Trend of Test Cases (users)",
+        "GCD - Widget drill down - Trend of Test Cases with TO source"
+      ]
+    }
+  },
+  "__widgetChildTests__": {
+    "aggregateSummary.test.js": {
+      "summary": "Tests for the Aggregate Summary widget covering test summary, failure rate, failure count, stability, defect summary, unique test cases, flakiness, muted tests, new failures, always failing, and platform metrics. Includes drill-down validation, muted/re-run attempt scenarios, global project filters, and PDF download.",
+      "coverage": [
+        "Set 1 - test summary and failed drill down",
+        "Set 1 - failure rate and drill down",
+        "Set 1 - failure count and drill down",
+        "Set 1 - stability and drill down",
+        "Set 1 - defect summary",
+        "Set 1 - unique test cases and drill down",
+        "Set 2 - flakiness and drill down (including count 0 project)",
+        "Set 2 - muted tests and drill down (including count 0 project)",
+        "Set 2 - new failures and drill down (no projects)",
+        "Set 2 - always failing and drill down (including count 0 project)",
+        "Set 2 - platforms",
+        "All projects - 7D data",
+        "Muted and re-run attempts - test summary, failure rate, failure count, stability, unique test cases, muted tests with drill downs",
+        "Global filters - single project - test summary and always failing",
+        "PDF download - PDF downloaded successfully and not empty"
+      ]
+    },
+    "alwaysFailing.test.js": {
+      "summary": "Tests for the Always Failing widget covering percentage (chart summary false) and number (chart summary true - average) display modes, with data and drill-down validation.",
+      "coverage": [
+        "Percentage, chart summary false - data and drill down",
+        "Number, chart summary true (average) - data and drill down"
+      ]
+    },
+    "buildPerformance.test.js": {
+      "summary": "Tests for the Build Performance widget covering chart summary false mode with data and drill-down validation.",
+      "coverage": [
+        "Chart summary false - data and drill down"
+      ]
+    },
+    "buildSummary.test.js": {
+      "summary": "Tests for the Build Summary widget covering bar and stacked bar visualisations with data and drill-down validation, plus global user filter.",
+      "coverage": [
+        "Visualisation bar - data and drill down",
+        "Visualisation stacked bar - data and drill down",
+        "Global filters - single user - data"
+      ]
+    },
+    "componentSummary.test.js": {
+      "summary": "Tests for the Component Summary widget covering unique tests, test runs, stability, failure rate, flakiness, new failures across multiple sets (including segments), muted/rerun attempts, all-projects 7D view, and global project/branch filters.",
+      "coverage": [
+        "Set 1 - unique tests and drill down",
+        "Set 1 - test runs and drill down",
+        "Set 2 - stability and drill down",
+        "Set 2 - failure rate and drill down",
+        "Set 3 - flakiness and drill down",
+        "Set 3 - new failures and drill down (no projects)",
+        "Set 4 (segments) - unique tests and drill down",
+        "Set 4 (segments) - test runs and drill down",
+        "All projects - 7D data",
+        "Muted and rerun attempts - stability, failure rate with drill downs",
+        "Global filters - multiple (project, branch) - test runs"
+      ]
+    },
+    "failureCategories.test.js": {
+      "summary": "Tests for the Failure Categories widget covering area and stacked bar visualisations with data and drill-down, plus global filter edge cases (no data for build tags and folder names).",
+      "coverage": [
+        "Visualisation area - data",
+        "Visualisation stacked bar - data and drill down",
+        "Global filters - conflicts false, build tags - no data",
+        "Global filters - conflicts false, folder names - no data"
+      ]
+    },
+    "failureRateByFolders.test.js": {
+      "summary": "Tests for the Failure Rate by Folders widget covering project filter with data and drill-down validation.",
+      "coverage": [
+        "Filters - projects - data and drill down"
+      ]
+    },
+    "filterEnhancement.test.js": {
+      "summary": "Tests for filter grouping enhancement (suggested and others) across all major widgets, covering ProjectName, UniqueBuildNames, BuildTags, Users, testTags, HostName, Branch, Browser, OS, Device filters applied to each widget.",
+      "coverage": [
+        "Aggregated Summary - ProjectName, UniqueBuildNames, BuildTags filters",
+        "Build Summary - ProjectName, UniqueBuildNames, BuildTags filters",
+        "Build Performance - ProjectName, UniqueBuildNames, BuildTags filters",
+        "Top Unique Errors - ProjectName, UniqueBuildNames, BuildTags filters",
+        "Stability - Users, testTags, HostName filters",
+        "Failure Category - Users, testTags, HostName filters",
+        "Failure Rate by Folder - Users, testTags, HostName filters",
+        "Platform Coverage - Users, testTags, HostName filters",
+        "Flakiness - ProjectName, Branch, Browser filters",
+        "Unique Test Cases - ProjectName, Branch, Browser filters",
+        "Tests By Status - ProjectName, Branch, Browser filters",
+        "Top Unstable Tests - ProjectName, Branch, Browser filters",
+        "Component Summary - ProjectName, Branch, Browser filters",
+        "Test Executions - ProjectName, OS, Device filters",
+        "Unique Errors Timeline - ProjectName, OS, Device filters",
+        "Always Failing - ProjectName, OS, Device filters",
+        "New Failures - ProjectName, OS, Device filters",
+        "Top Time Taking Tests - ProjectName, OS, Device filters"
+      ]
+    },
+    "flakiness.test.js": {
+      "summary": "Tests for the Flakiness widget covering percentage (chart summary false) and number (chart summary true - unique tests) display modes, with data and drill-down validation.",
+      "coverage": [
+        "Percentage, chart summary false - data and drill down",
+        "Number, chart summary true (unique tests) - data and drill down"
+      ]
+    },
+    "newFailures.test.js": {
+      "summary": "Tests for the New Failures widget covering percentage (chart summary false) and number (chart summary true - unique tests) display modes with data validation.",
+      "coverage": [
+        "Percentage, chart summary false - data",
+        "Number, chart summary true (unique tests) - data"
+      ]
+    },
+    "platformCoverage.test.js": {
+      "summary": "Tests for the Platform Coverage widget covering data and drill-down validation, and global folder name filter.",
+      "coverage": [
+        "Data and drill down",
+        "Global filters - single folder name - data"
+      ]
+    },
+    "runMonitoring.test.js": {
+      "summary": "Tests for the Run Monitoring widget covering specific test run & QG status data, global date filter for specific test run, build creation/modification time & status data, test case count matching test listing, and global date filter for creation/modification.",
+      "coverage": [
+        "Specific Test Run & QG Status - data verification",
+        "Specific Test Run & QG Status - global date filter verification",
+        "Build creation/modification time & build status - data",
+        "Test case count on run monitoring matches test listing count",
+        "Build creation/modification - global date filter verification"
+      ]
+    },
+    "stability.test.js": {
+      "summary": "Tests for the Stability widget covering chart summary false and true modes, all-projects 7D view, global filters (projects, build tags, folder names), custom formula (passed and failed only), and edge cases (empty numerator, empty denominator, both empty) with flags.",
+      "coverage": [
+        "Chart summary false - data and drill down",
+        "Chart summary true - data and drill down",
+        "All projects - 7D - data and drill down",
+        "Global filters - multiple (projects, build tags, folder names) - data and drill down",
+        "Custom Formula - Passed and Failed Only - data and drill down",
+        "Edge Case - Empty Numerator - isEmptyNumerator flag present and handled gracefully",
+        "Edge Case - Empty Denominator - isEmptyDenominator flag present and handled gracefully",
+        "Edge Case - Both Numerator and Denominator Empty - both flags present and handled gracefully"
+      ]
+    },
+    "testByStatus.test.js": {
+      "summary": "Tests for the Test By Status widget covering data and drill-down for multiple configurations, plus global project filter conflict handling.",
+      "coverage": [
+        "Configuration 1 - data and drill down",
+        "Configuration 2 - data and drill down",
+        "Global filters - conflicts (projects) - data"
+      ]
+    },
+    "testExecutions.test.js": {
+      "summary": "Tests for the Test Executions widget covering chart summary false and true modes, muted and rerun attempt scenarios, and global unique build names filter.",
+      "coverage": [
+        "Chart summary false - data and drill down",
+        "Chart summary true - data and drill down",
+        "Muted and rerun attempts - data and drill down",
+        "Global filters - single unique build names - data"
+      ]
+    },
+    "testRunReport.test.js": {
+      "summary": "Tests for the Test Run Report covering static builds API query parameters, data validation for all tile statuses (passed, failed, skipped, always failing, flaky, open issues), column configuration, testing trends APIs, global filters, search functionality, private report creation, and PDF download.",
+      "coverage": [
+        "Static builds API with various query parameters",
+        "Validate passed data in tiles and data sets",
+        "Validate failed data in tiles and data sets",
+        "Validate skipped data in tiles and data sets",
+        "Validate always failing data in tiles and data sets",
+        "Validate flaky data in tiles and data sets",
+        "Validate open issues data in tiles and data sets",
+        "Configure column in data set",
+        "Verify testing trends APIs",
+        "Verify global filters work",
+        "Verify search functionality works",
+        "Verify private reports are created",
+        "PDF download - PDF downloaded successfully and not empty"
+      ]
+    },
+    "topTimeTakingTests.test.js": {
+      "summary": "Tests for the Top Time Taking Tests widget covering project, CI runs, and hooks visibility filters with data validation.",
+      "coverage": [
+        "Filters - projects, CI runs, hooksVisibility - data"
+      ]
+    },
+    "topUniqueErrors.test.js": {
+      "summary": "Tests for the Top Unique Errors widget covering project and OS filters with data and drill-down, plus global branch filter.",
+      "coverage": [
+        "Filters - projects, OS - data and drill down",
+        "Global filters - single branch - data"
+      ]
+    },
+    "topUniqueErrorsTimeline.test.js": {
+      "summary": "Tests for the Top Unique Errors Timeline widget covering top 5 and custom configurations with data and drill-down validation.",
+      "coverage": [
+        "Top 5 - data and drill down",
+        "Custom - data and drill down"
+      ]
+    },
+    "topUnstableTests.test.js": {
+      "summary": "Tests for the Top Unstable Tests widget covering project filters and global unique build names filter (conflicts false) with data validation.",
+      "coverage": [
+        "Filters - projects - data",
+        "Global filters - conflicts false, unique build names - data"
+      ]
+    },
+    "uniqueTestCases.test.js": {
+      "summary": "Tests for the Unique Test Cases widget covering chart summary false mode with data and drill-down, and global filter with no data scenario.",
+      "coverage": [
+        "Chart summary false - data and drill down",
+        "Global filters - no data"
+      ]
+    },
+    "userHomeTakeAway.test.js": {
+      "summary": "Tests for the Overview/Home Key Takeaways (Time Savings) widget covering unique builds (auto-analyzer running), personalised filters (project name & unique build name) with time savings attributes (test failures, always failing, flaky count, auto-analyzed count, unique errors), and time savings for paid plan without personalised filters.",
+      "coverage": [
+        "UniqueBuilds - AutoAnalyzerRunning",
+        "Personalised filter (project name & unique build name) - test failures reduction attribute",
+        "Personalised filter - always failing test and reduction attribute",
+        "Personalised filter - flaky count attribute",
+        "Personalised filter - auto analyzed count",
+        "Personalised filter - unique error and reduction attribute",
+        "Time Saving Widget with no personalised filters - Paid plan"
+      ]
+    }
+  }
 }
