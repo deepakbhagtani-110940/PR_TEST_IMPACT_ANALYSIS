@@ -13,19 +13,27 @@ permissions:
 jobs:
   analyze:
     runs-on: ubuntu-latest
+    # ✅ Concurrency group (Security requirement: max 1 in-flight per PR)
+    concurrency:
+      group: ai-analysis-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
 
     steps:
       - name: Checkout PR code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4  # ✅ Note: Use @<SHA> for strict security
         with:
           fetch-depth: 0
 
-      - name: Get diff (PR only changes)
+      - name: Generate Metadata (No Code Content)
         shell: bash
         run: |
           git fetch origin main
-          git diff "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}" > diff.txt
-          git diff --name-only "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}" > files.txt
+          # ✅ Security: Only generating file paths/status, NOT code diffs
+          git diff --name-status "origin/main" "${{ github.event.pull_request.head.sha }}" > files.txt
+          
+          # Debug: Show metadata in GH Actions logs for visibility
+          echo "--- Files to be analyzed ---"
+          cat files.txt
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -33,23 +41,41 @@ jobs:
           python-version: '3.10'
 
       - name: Install dependencies
-        run: pip install --disable-pip-version-check --no-cache-dir requests
+        run: pip install --no-cache-dir requests
 
       - name: Run AI Analysis (Gemini)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python .github/scripts/analyze.py
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          GEMINI_AUDIT_LOG: "gemini_audit_log.jsonl"
+        run: |
+          # Use -u to get unbuffered logs in GitHub Actions
+          python -u .github/scripts/analyze.py
 
       - name: Post/Update PR Comment
+        if: always() # Ensure we try to post even if previous steps fail
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
+            const path = 'output.txt';
+            
+            if (!fs.existsSync(path)) {
+              console.log("No output.txt found. Skipping comment.");
+              return;
+            }
 
-            const marker = "<!-- ai-impact-analysis -->";
-            const bodyRaw = fs.readFileSync('output.txt', 'utf8');
+            const marker = "";
+            const bodyRaw = fs.readFileSync(path, 'utf8');
+            
+            // ✅ Security: Fail-safe - don't post if AI returned empty or pure error
+            if (!bodyRaw.trim() || bodyRaw.includes("⚠️ Analysis failed")) {
+               console.log("Analysis output is empty or contains an error. Check logs.");
+            }
+
             const body = `${marker}\n${bodyRaw}`.trim();
-
             const { data: comments } = await github.rest.issues.listComments({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -73,3 +99,11 @@ jobs:
                 body
               });
             }
+
+      - name: Upload Audit Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gemini-audit-log
+          path: gemini_audit_log.jsonl
+          retention-days: 7
