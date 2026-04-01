@@ -6,7 +6,7 @@ import datetime
 import sys
 
 # Configuration from environment
-MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash").strip()
+MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash-lite").strip()
 ENDPOINT = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent"
 AUDIT_LOG = os.getenv("GEMINI_AUDIT_LOG", "gemini_audit_log.jsonl")
 
